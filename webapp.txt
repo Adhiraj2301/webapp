@@ -1,0 +1,478 @@
+<%-- 
+    Document   : Register
+    Created on : May 6, 2019, 2:22:23 PM
+    Author     : ruchita.saroj
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Create Account
+        <form name="Entry Form2" action="Registerprocess">
+                Create Username: <input type="text" name="name" value="" /><br>
+                Create password:&ensp;<input type="text" name="password" value="" /><br>
+                First Name:&emsp;&nbsp;<input type="text" name="fname" value="" /><br>
+                Last Name:&emsp;&ensp;<input type="text" name="lname" value="" /><br>
+                Designation:&emsp;<input type="text" name="desig" value="" /><br>
+                <input type="submit" value="Submit" />
+            </form>
+        </h1>
+    </body>
+</html>
+
+
+<%-- 
+    Document   : index
+    Created on : May 6, 2019, 11:36:32 AM
+    Author     : ruchita.saroj
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>User Login
+            <form name="Entry Form" action="Indexprocess">
+                Enter Username: <input type="text" name="name" value="" /><br>
+                Enter Password:<input type="text" name="password" value="" /><br>
+                <input type="submit" value="Submit" />
+                
+            </form>
+            <form name="Register" action="Register.jsp">
+                <input type="submit" value="Create account" />
+            </form>
+        </h1>
+    </body>
+</html>
+
+<%-- 
+    Document   : Welcomepage
+    Created on : May 7, 2019, 12:05:02 PM
+    Author     : ruchita.saroj
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        
+        <%
+        String text=(String)request.getAttribute("data");
+        System.out.println("================"+text);
+        
+        %>
+     <h1>Hi <%=text%></h1>
+        <img src="logo.jpg" width="360px" height="500px">
+       
+    </body>
+</html>
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author ruchita.saroj
+ */
+public class Indexprocess extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP
+     * <code>GET</code> and
+     * <code>POST</code> methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out=response.getWriter();
+     
+        try {
+            
+            String n = request.getParameter("name");
+            String p = request.getParameter("password");
+            if(datab.validate(n,p)){
+                request.setAttribute("data", n);
+                RequestDispatcher rd = request.getRequestDispatcher("Welcomepage.jsp");
+                rd.forward(request,response);
+                
+            }
+            else{
+                out.println("Incorrect login");
+                RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+                rd.include(request,response);
+            }
+            
+        } finally { 
+            out.close();
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+}
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author ruchita.saroj
+ */
+public class Registerprocess extends HttpServlet {
+    
+    
+    
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        boolean flag=false;
+        
+        PrintWriter out = response.getWriter();
+        try {
+           
+            String n = request.getParameter("name");
+            String p = request.getParameter("password");
+            String f = request.getParameter("fname");
+            String l = request.getParameter("lname");
+            String d = request.getParameter("desig");
+            request.setAttribute("data", n);
+            flag= datainp.enter(n,p,f,l,d);
+            
+            if(datab.validate(n,p)){
+            RequestDispatcher rd = request.getRequestDispatcher("Welcomepage.jsp");
+            rd.forward(request,response);
+            }
+            else{
+                out.println("Retry");
+                RequestDispatcher rd = request.getRequestDispatcher("Register.jsp");
+                rd.include(request,response);
+            }
+        } finally {            
+            out.close();
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+}
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author ruchita.saroj
+ */
+public class datab extends HttpServlet {
+
+    public static boolean validate(String name, String pass) {
+        boolean status = false;
+        String fname = null,lname = null,desig = null;
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Connection con = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@192.168.248.70:1521:sitosmdb", "rftr", "rftr");
+
+            PreparedStatement ps = con.prepareStatement(
+                    "select * from LOGINTABLE where USERNAME=? and PASSWORD=?");
+            ps.setString(1, name);
+            ps.setString(2, pass);
+            ps.setString(3, fname);
+            ps.setString(4, lname);
+            ps.setString(5, desig);
+
+            ResultSet rs = ps.executeQuery();
+            status = rs.next();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return status;
+    }
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        //PrintWriter out = response.getWriter();
+        try {
+            
+        } finally {
+            //out.close();
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+}
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author ruchita.saroj
+ */
+public class datainp extends HttpServlet {
+
+    public static boolean enter(String name, String pass, String fname, String lname, String des) {
+        boolean status = false;
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Connection con = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@192.168.248.70:1521:sitosmdb", "rftr", "rftr");
+
+            PreparedStatement ps = con.prepareStatement( "insert into LOGINTABLE values(?, ?, ?, ?, ?)");
+            ps.setString(1, name);
+            ps.setString(2, pass);
+            ps.setString(3, fname);
+            ps.setString(4, lname);
+            ps.setString(5, des);
+
+            ps.executeUpdate(); 
+  
+            ps.close(); 
+            con.close(); 
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return status;
+    }
+    
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        //PrintWriter out = response.getWriter();
+        try {
+            /*
+             * TODO output your page here. You may use following sample code.
+             */
+            
+        } finally {            
+            //out.close();
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+}
